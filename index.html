@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>巡邏簽到系統</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+    label { display: block; margin-top: 20px; }
+    input { width: 100%; padding: 10px; margin-top: 5px; }
+    button { padding: 10px 20px; margin-top: 20px; }
+    .info { margin-top: 20px; }
+    .success { color: green; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>巡邏簽到頁面</h2>
+  <div class="info">
+    <p><strong>巡邏地點：</strong><span id="point"></span></p>
+    <p><strong>裝置型號：</strong><span id="device"></span></p>
+    <p><strong>時間：</strong><span id="timestamp"></span></p>
+  </div>
+
+  <label for="officer">巡邏人員編號：</label>
+  <input type="text" id="officer" placeholder="請輸入您的員工編號">
+
+  <button onclick="submitCheckIn()">確認簽到</button>
+
+  <div id="result" class="success"></div>
+
+  <script>
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name) || '未知';
+    }
+
+    function getDeviceInfo() {
+      return navigator.userAgent;
+    }
+
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleString('zh-Hant-TW');
+    }
+
+    document.getElementById('point').textContent = getQueryParam('point');
+    document.getElementById('device').textContent = getDeviceInfo();
+    document.getElementById('timestamp').textContent = getCurrentTime();
+
+    function submitCheckIn() {
+      const officer = document.getElementById('officer').value.trim();
+      if (!officer) {
+        alert('請輸入巡邏人員編號');
+        return;
+      }
+
+      const record = {
+        地點: getQueryParam('point'),
+        裝置: getDeviceInfo(),
+        時間: getCurrentTime(),
+        員工: officer
+      };
+
+      console.log('簽到資料：', record);
+      // 你可以改為使用 fetch() 上傳到 Google Sheets API 或其他後端服務
+
+      document.getElementById('result').textContent = '✅ 簽到完成！資料已紀錄（僅本地模擬）';
+    }
+  </script>
+</body>
+</html>
